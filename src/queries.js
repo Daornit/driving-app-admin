@@ -221,3 +221,41 @@ export const DELETE_TEST = gql`
     }
   }
 `;
+
+
+
+export const CREATE_DUREM = gql`
+  mutation addDurem($duremInput: DuremInput!, $categoryId: String!){
+  addDurem(durem: $duremInput, duremCategoryId: $categoryId){ 
+		_id
+    category{
+      name
+    }
+    title
+    description
+    image
+  }
+}
+`;
+export const GET_DUREM = gql`
+  query{
+  duremuud{
+    _id
+    category{
+      name
+    }
+    description
+    title
+    image
+  }
+}
+`;
+
+
+export const DELETE_DUREM = gql`
+  mutation removeDurem($duremId: String!){
+    removeDurem(duremId:$duremId){
+      _id
+    }
+  }
+`;
