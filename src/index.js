@@ -22,7 +22,7 @@ import "assets/css/material-dashboard-react.css?v=1.8.0";
 import 'react-notifications-component/dist/theme.css';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4001/graphql',
+  uri: 'https://driving-app-graphql.herokuapp.com/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {

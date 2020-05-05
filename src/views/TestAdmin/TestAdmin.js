@@ -21,6 +21,9 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import Switch from '@material-ui/core/Switch';
+
 import TextField from '@material-ui/core/TextField';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Modal from '@material-ui/core/Modal';
@@ -107,6 +110,8 @@ export default function TestAdmin() {
     description:"",
     inputAnswer:[]
   });
+  const [switchOp, setSwitchOp] = React.useState(false);
+  const [singleAnswer, setSingleAnswer] = React.useState("");
 
   const { loading, err, data, refetch } = useQuery(GET_TESTS);
 
@@ -124,15 +129,23 @@ export default function TestAdmin() {
     });
   };
 
+  const handleChangeSA = (event) => {
+    setSingleAnswer(event.target.value);
+  }
+
+  const handleChangeSwitch = () => {
+    setSwitchOp(!switchOp);
+  };
+
   const handleCreateTest = () => {
     console.log(newTest);
-    if(!newTest.name){
-      notification.error('name talbariig zaaval buglunu uu')
+    if(!newTest.description){
+      notification.error('description talbariig zaaval buglunu uu')
       return;
     }
     createTest({
       variables: {
-        tests: newTest
+        testInput: newTest
       }
     })
     refetch();
@@ -158,6 +171,16 @@ export default function TestAdmin() {
     setOpen(false);
   };
 
+  const handleAnswerAdd = () => {
+    let answers = [...newTest.inputAnswer];
+    answers.push({
+      content: singleAnswer,
+      isCorrect: switchOp
+    })
+    setSwitchOp(false);
+    setSingleAnswer("");
+    setNewTest({...newTest,  inputAnswer: answers})
+  }
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <Card>
@@ -196,50 +219,36 @@ export default function TestAdmin() {
             </GridContainer>
             <GridContainer>
               <GridItem xs={12} sm={12} md={12}>
-                <TextField
-                    label="Зөв хариулт" 
-                    name="content"
-                    value={newTest.inputAnswer} 
-                    className={classes.margin15}
-                    onChange={handleChange}
-                    fullWidth
-                  />
+                Хариултууд: {newTest.inputAnswer.map(obj => {
+                  return (
+                    <span>{obj.content + (obj.isCorrect ? ' зөв': ' буруу')}, </span>
+                  );
+                })}
               </GridItem>
             </GridContainer>
             <GridContainer>
               <GridItem xs={12} sm={12} md={12}>
                 <TextField
-                    label="Зургийн URL" 
-                    name="image"
-                    value={newTest.image} 
+                    label="хариулт" 
+                    name="singleAnswer"
+                    value={singleAnswer} 
                     className={classes.margin15}
-                    onChange={handleChange}
+                    onChange={handleChangeSA}
                     fullWidth
                   />
-              </GridItem>
-            </GridContainer>
-            <GridContainer>
-              <GridItem xs={12} sm={12} md={12}>
-                <TextField
-                    label="Зургийн URL" 
-                    name="image"
-                    value={newTest.image} 
-                    className={classes.margin15}
-                    onChange={handleChange}
-                    fullWidth
+                <FormGroup row>
+                  <FormControlLabel
+                    control={<Switch checked={switchOp} onChange={handleChangeSwitch}/>}
+                    label="Зөв хариулт эсэх"
                   />
-              </GridItem>
-            </GridContainer>
-            <GridContainer>
-              <GridItem xs={12} sm={12} md={12}>
-                <TextField
-                    label="Зургийн URL" 
-                    name="image"
-                    value={newTest.image} 
-                    className={classes.margin15}
-                    onChange={handleChange}
-                    fullWidth
-                  />
+                </FormGroup>
+                <Button
+                  fullWidth
+                  color="primary" 
+                  onClick={handleAnswerAdd}         
+                  >
+                  Хариулт нэмэх
+                </Button>
               </GridItem>
             </GridContainer>
           </CardBody>
