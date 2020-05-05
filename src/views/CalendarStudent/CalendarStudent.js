@@ -5,6 +5,7 @@ export default function CalendarStudent() {
   
   return (
     <div>
+      <h1>bkdjfsaklj</h1>
     <Calendar
     />
   </div>

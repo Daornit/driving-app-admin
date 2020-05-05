@@ -34,13 +34,13 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   
-  // {
-  //   path: "/durem",
-  //   name: "Дүрэм админ",
-  //   icon: Dashboard,
-  //   component: DuremAdmin,
-  //   layout: "/admin"
-  // },
+  {
+    path: "/durem",
+    name: "Дүрэм админ",
+    icon: Dashboard,
+    component: DuremAdmin,
+    layout: "/admin"
+  },
   {
     path: "/users",
     name: "Хэрэглэгчид",
@@ -78,21 +78,21 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/student/test",
+    path: "/test",
     name: "Шалгалт өгөх",
     icon: LibraryBooks,
     component: Test,
     layout: "/student"
   },
   {
-    path: "/student/Durem",
+    path: "/Durem",
     name: "Дүрэм харах",
     icon: Dashboard,
     component: Durem,
     layout: "/student"
   },
   {
-    path: "/student/Tutorial",
+    path: "/Tutorial",
     name: "Хичээл үзэх",
     icon: Language,
     component: Tutorial,
