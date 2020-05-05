@@ -203,6 +203,7 @@ export const GET_TESTS = gql`
       _id
       description
       image
+      hint
       inputAnswer{
       isCorrect
         image

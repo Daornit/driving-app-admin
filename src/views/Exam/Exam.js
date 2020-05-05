@@ -83,7 +83,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function Test() {
+export default function Exam() {
   const [openTooltip, setOpenTooltip] = React.useState(false);
 
   const handleTooltipOpen = () => {
@@ -105,6 +105,7 @@ export default function Test() {
   const [error, setError] = React.useState(false);
   const [helperText, setHelperText] = React.useState('');
   const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [correctCount, setCorrectCount] = React.useState(0);
 
   const { loading, err, data, refetch } = useQuery(GET_TESTS);
 
@@ -123,19 +124,16 @@ export default function Test() {
   };
 
   const handleNext = () => {
-    if (value.includes('true')) {
-      let count = currentIndex + 1;
-      setHelperText('Хариулт зөв байна');
-      setError(false);
-      if(currentIndex !== tests.length){
-        console.log('test set currentIndex ' + count)
-
-        setCurrentIndex(count);
+    if (value) {
+      if (value.includes('true')) {
+        setCorrectCount(correctCount+1);
       }
+      setCurrentIndex(currentIndex + 1);
     } else {
-      setHelperText('Хариулт буруу байна');
+      setHelperText('Хариултаа сонгоно уу');
       setError(false);
     }
+    
   };
 
   if(currentIndex === tests.length) return (
@@ -155,7 +153,7 @@ export default function Test() {
         </GridItem>
       </GridContainer>
       <div className={classes.center}>
-        Амжилттай бэлтгэлийг давлаа
+        Үрдүн нийт {tests.length}-ээс {correctCount} нь зөв хариуллаа
       </div>
     </Card>
   );
@@ -205,13 +203,6 @@ export default function Test() {
               </Tooltip>
             </GridItem>
             <GridContainer>
-              <GridItem xs={12} sm={12} md={6}>
-                {currentIndex !== 0 ? <Button color="primary" className={classes.button} onClick={
-                  () => setCurrentIndex(currentIndex-1)
-                }>
-                  Өмнөх
-                </Button>: ""}
-              </GridItem>
               <GridItem xs={12} sm={12} md={6}>
                 <Button type="submit" variant="outlined" color="primary" className={classes.button} onClick={()=> {
                   handleNext();
