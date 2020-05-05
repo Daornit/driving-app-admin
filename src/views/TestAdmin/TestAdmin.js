@@ -22,7 +22,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
-
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import Modal from '@material-ui/core/Modal';
 
 
 import avatar from "assets/img/faces/test1.jpg";
@@ -102,10 +103,9 @@ export default function TestAdmin() {
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
   const [newTest, setNewTest] = React.useState({
-    name: "",
-    email: "",
     image: "",
-    description:""
+    description:"",
+    inputAnswer:[]
   });
 
   const { loading, err, data, refetch } = useQuery(GET_TESTS);
@@ -118,7 +118,7 @@ export default function TestAdmin() {
 
   const handleChange = event => {
     const name = event.target.name;
-    setNewCourse({
+    setNewTest({
       ...newTest,
       [name]: event.target.value,
     });
@@ -160,41 +160,21 @@ export default function TestAdmin() {
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
-      {/* <Card>
+      <Card>
         <GridContainer id="simple-modal-title">
           <CardHeader color="primary">
             <GridItem xs={12} sm={12} md={12}>
-              <h4 className={classes.cardTitleWhite}>Жолооны курс нэмэх</h4>
+              <h4 className={classes.cardTitleWhite}>Жолооны тест нэмэх</h4>
             </GridItem>
           </CardHeader>
         </GridContainer>
         <CardBody>
             <GridContainer id="simple-modal-description">
-              <GridItem xs={12} sm={12} md={6}>
-                <TextField
-                  label="Нэр" 
-                  name="name"
-                  value={newCourse.name}
-                  className={classes.margin15}
-                  onChange={handleChange}
-                  fullWidth
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
-                <TextField
-                  label="Цахим шуудан(Email)" 
-                  name="email"
-                  value={newCourse.email} 
-                  className={classes.margin15}
-                  onChange={handleChange}
-                  fullWidth
-                />
-              </GridItem>
               <GridItem xs={12} sm={12} md={12}>
                 <TextField
                   label="Зургийн URL" 
                   name="image"
-                  value={newCourse.image} 
+                  value={newTest.image} 
                   className={classes.margin15}
                   onChange={handleChange}
                   fullWidth
@@ -206,12 +186,60 @@ export default function TestAdmin() {
               <GridItem xs={12} sm={12} md={12}>
                 <TextareaAutosize style={{width: "100%"}}
                   name="description"
-                  value={newCourse.description} 
+                  value={newTest.description} 
                   className={classes.margin15}
                   onChange={handleChange}
                   rows={10}
-                  placeholder="Курсын дэлгэрэнгүй тайлбар."  
+                  placeholder="Тайлбар буюу асуулт."  
                 />
+              </GridItem>
+            </GridContainer>
+            <GridContainer>
+              <GridItem xs={12} sm={12} md={12}>
+                <TextField
+                    label="Зөв хариулт" 
+                    name="content"
+                    value={newTest.inputAnswer} 
+                    className={classes.margin15}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+              </GridItem>
+            </GridContainer>
+            <GridContainer>
+              <GridItem xs={12} sm={12} md={12}>
+                <TextField
+                    label="Зургийн URL" 
+                    name="image"
+                    value={newTest.image} 
+                    className={classes.margin15}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+              </GridItem>
+            </GridContainer>
+            <GridContainer>
+              <GridItem xs={12} sm={12} md={12}>
+                <TextField
+                    label="Зургийн URL" 
+                    name="image"
+                    value={newTest.image} 
+                    className={classes.margin15}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+              </GridItem>
+            </GridContainer>
+            <GridContainer>
+              <GridItem xs={12} sm={12} md={12}>
+                <TextField
+                    label="Зургийн URL" 
+                    name="image"
+                    value={newTest.image} 
+                    className={classes.margin15}
+                    onChange={handleChange}
+                    fullWidth
+                  />
               </GridItem>
             </GridContainer>
           </CardBody>
@@ -220,17 +248,25 @@ export default function TestAdmin() {
             <Button
               fullWidth
               color="primary" 
-              onClick={handleCreateCourse}         
+              onClick={handleCreateTest}         
               >
               Нэмэх
             </Button>
           </GridItem>
         </GridContainer>
-      </Card> */}
+      </Card>
     </div>
   );
   return (
     <>
+    <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        {body}
+      </Modal>
     <Card>
     <GridContainer>
             <GridItem xs={12} sm={12} md={12}>
