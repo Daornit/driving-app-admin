@@ -14,6 +14,9 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import avatar from "assets/img/faces/test1.jpg";
 
 import Tooltip from '@material-ui/core/Tooltip';
+import HelpIcon from '@material-ui/icons/Help';
+import IconButton from '@material-ui/core/IconButton';
+
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Radio from '@material-ui/core/Radio';
 import CustomInput from "components/CustomInput/CustomInput.js";
@@ -23,8 +26,6 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormLabel from '@material-ui/core/FormLabel';
 import { green } from "@material-ui/core/colors";
-import HelpIcon from '@material-ui/icons/Help';
-import IconButton from '@material-ui/core/IconButton';
 
 
 function getModalStyle() {

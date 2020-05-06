@@ -15,6 +15,7 @@ import PostAdmin from "views/PostAdmin/PostAdmin.js";
 import Durem from "views/Durem/Durem.js"
 import BeldehAdmin from "views/BeldehAdmin/BeldehAdmin.js";
 import Test from "views/test/Test.js";
+import Exam from "views/Exam/Exam.js";
 import Beldeh from "views/beldeh/beldeh.js"
 import CalendarStudent from "views/CalendarStudent/CalendarStudent.js";
 import Tutorial from "views/tutorial/Tutorial.js"
@@ -74,7 +75,7 @@ const dashboardRoutes = [
     path: "/answer",
     name: "Шалгалтад бэлдэх",
     icon: Unarchive,
-    component: BeldehAdmin,
+    component: Test,
     layout: "/admin"
   },
   {
@@ -85,10 +86,10 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/test",
+    path: "/student/exam",
     name: "Шалгалт өгөх",
     icon: LibraryBooks,
-    component: Test,
+    component: Exam,
     layout: "/student"
   },
   {
@@ -117,7 +118,7 @@ const dashboardRoutes = [
     path: "/shalgaltad_beldeh",
     name: "Шалгалтад бэлдэх",
     icon: Unarchive,
-    component: Beldeh,
+    component: Test,
     layout: "/student"
   },
 

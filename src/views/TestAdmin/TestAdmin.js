@@ -27,7 +27,8 @@ import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Modal from '@material-ui/core/Modal';
-
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import avatar from "assets/img/faces/test1.jpg";
 
@@ -92,6 +93,12 @@ const useStyles = makeStyles(
     },
     head: {
       backgroundColor: "primary", 
+    },
+    margin: {
+      margin: '2rem 2rem 2rem 2rem',
+    },
+    paddingLeft: {
+      paddingLeft: '1rem',
     }
   })
 );
@@ -108,7 +115,8 @@ export default function TestAdmin() {
   const [newTest, setNewTest] = React.useState({
     image: "",
     description:"",
-    inputAnswer:[]
+    inputAnswer:[],
+    hint:""
   });
   const [switchOp, setSwitchOp] = React.useState(false);
   const [singleAnswer, setSingleAnswer] = React.useState("");
@@ -140,7 +148,7 @@ export default function TestAdmin() {
   const handleCreateTest = () => {
     console.log(newTest);
     if(!newTest.description){
-      notification.error('description talbariig zaaval buglunu uu')
+      notification.error('Description талбарыг заавал бөглөнө үү!')
       return;
     }
     createTest({
@@ -149,13 +157,14 @@ export default function TestAdmin() {
       }
     })
     refetch();
+    notification.success('Амжилттай үүслээ')
     setNewTest({
       image: "",
       description:"",
-      inputAnswer:[]
+      inputAnswer:[],
+      hint:""
     })
     setOpen(false);
-    notification.success('amjilttai uuslee')
   }
 
   let listOfTest = [];
@@ -192,6 +201,19 @@ export default function TestAdmin() {
           </CardHeader>
         </GridContainer>
         <CardBody>
+            <GridContainer id="simple-modal-description">
+              <GridItem xs={12} sm={12} md={12}>
+                <TextField
+                  label="Hint" 
+                  name="hint"
+                  value={newTest.hint} 
+                  className={classes.margin15}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </GridItem>
+            </GridContainer>
+            <br></br>
             <GridContainer id="simple-modal-description">
               <GridItem xs={12} sm={12} md={12}>
                 <TextField
@@ -306,7 +328,7 @@ export default function TestAdmin() {
         <GridContainer>
           {data.tests.map(test => {
             return (
-            <GridItem xs={12} sm={12} md={4}>
+            <GridItem key={test._id} xs={12} sm={12} md={4}>
               <Card profile>
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
@@ -319,13 +341,13 @@ export default function TestAdmin() {
                     <GridItem xs={12} sm={12} md={12}>
                     <CardAvatar>
                       <a href="#pablo" onClick={e => e.preventDefault()}>
-                        <img src={test.image} className={classes.testimg} alt="..." />
+                        <img style={{width: '100%'}} src={test.image} className={classes.testimg} alt="..." />
                       </a>
                     </CardAvatar>
                   </GridItem>
   
                   <GridItem xs={12} sm={12} md={12}>
-                    <RadioGroup aria-label="gender" name="gender1" value={'a'} onChange={handleChange}>
+                    <RadioGroup aria-label="gender" name="gender1" value={'a'} onChange={handleChange} className={classes.paddingLeft}>
                       {
                         test.inputAnswer.map((answer, index) => {
                           return (
@@ -338,7 +360,16 @@ export default function TestAdmin() {
                     </RadioGroup>
                   </GridItem>
                   <GridContainer>
-  
+                  <GridItem xs={12} sm={12} md={12}>
+                    <IconButton aria-label="delete" className={classes.margin} onClick={() => {
+                      console.log(test._id);
+                      deleteTest({variables: {testId: test._id}}).then(({data}) => {
+                        refetch(); 
+                      })
+                    }}>
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </GridItem>
                   </GridContainer>
                 </GridContainer>
               </Card>
