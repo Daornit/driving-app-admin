@@ -136,8 +136,8 @@ export const DELETE_TUTORIALS = gql`
 
 
 export const CREATE_TUTORIALS = gql`
-  mutation addTutorial($TutorialInput: TutorialInput!){
-  addTutorial(tutorial:$TutorialInput){
+  mutation addTutorial($tutorialInput: TutorialInput!){
+  addTutorial(tutorial:$tutorialInput){
     _id
     title
     description
@@ -222,6 +222,15 @@ export const DELETE_TEST = gql`
 `;
 
 
+export const CREATE_DUREMCATEGORY = gql`
+  mutation createDuremCategory($categoryName: String!){
+    createDuremCategory(name: $categoryName){ 
+      _id
+      name
+}
+  }
+`;
+
 
 export const CREATE_DUREM = gql`
   mutation addDurem($duremInput: DuremInput!, $categoryId: String!){
@@ -238,15 +247,16 @@ export const CREATE_DUREM = gql`
 `;
 export const GET_DUREM = gql`
   query{
-  duremuud{
-    _id
-    category{
+    duremcategorys{
+      _id
       name
+      durmuud{
+        _id
+        title
+        description
+        image
+      }
     }
-    description
-    title
-    image
-  }
 }
 `;
 

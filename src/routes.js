@@ -31,6 +31,13 @@ const dashboardRoutes = [
     name: "Жолооны курс",
     icon: "content_paste",
     component: CourseAdmin,
+    layout: "/director"
+  },
+  {
+    path: "/course",
+    name: "Жолооны курс",
+    icon: "content_paste",
+    component: CourseAdmin,
     layout: "/admin"
   },
   

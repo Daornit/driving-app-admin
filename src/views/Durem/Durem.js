@@ -6,39 +6,47 @@ import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
 
 // core components
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Button from "components/CustomButtons/Button.js";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
+import Tasks from "components/Tasks/Tasks.js";
+import CustomTabs from "components/CustomTabs/CustomTabs.js";
+import Button from "components/CustomButtons/Button.js";
+
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-
 import CardBody from "components/Card/CardBody.js";
-import { Grid } from "@material-ui/core";
-import { cardHeader } from "assets/jss/material-dashboard-react";
+import Table from "components/Table/Table";
+import { bugs, website} from "variables/general.js";
+import Modal from '@material-ui/core/Modal';
+import CustomInput from "components/CustomInput/CustomInput.js";
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import Typography from '@material-ui/core/Typography';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+//graphql
+import { GET_DUREM} from 'queries';
+import { useQuery} from '@apollo/react-hooks';
+import notification from 'helpers/notification';
 
 
 
 
 const useStyles = makeStyles(
   (theme) => ({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
+    root: {
+      width: '100%',
     },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      flexBasis: '33.33%',
+      flexShrink: 0,
+    },
+    secondaryHeading: {
+      fontSize: theme.typography.pxToRem(15),
+      color: theme.palette.text.secondary,
     },
     cardCategoryWhite: {
       "&,& a,& a:hover,& a:focus": {
@@ -80,81 +88,105 @@ const useStyles = makeStyles(
     },
     head: {
       backgroundColor: "primary",
+    },
+    tableActionButton: {
     }
   })
 );
 
 export default function Durem() {
   const classes = useStyles();
-  const [category, setCategory] = React.useState('');
+  // getModalStyle is not a pure function, we roll the style only on the first render
+  
 
-  const handleChange = (event) => {
-    setCategory(event.target.value);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handlePanelChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
   };
+
+
+  const { loading, err, data, refetch } = useQuery(GET_DUREM);
+  
+  if (loading) return 'Loading...';
+  if (err) {
+    notification.error(err.message);
+    return err.message;
+  };
+  
 
   return (
     <div>
+      
+      <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
-        
         <Card>
-          
-<GridContainer>
-<GridItem xs={12} sm={12} md={12}>
-          <CardHeader color="primary">
-            <GridContainer>
-          <GridItem xs={12} sm={12} md={8}>
-            <h4 className={classes.cardTitleWhite}>Дүрэм харах</h4>
-            <p className={classes.cardCategoryWhite}>
-              Замын хөдөлгөөний дүрмүүд
-            </p>
+          <GridContainer>
+            <GridItem xs={12} sm={12} md={12}>
+              <CardHeader color="primary">
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={8}>
+                    <h4 className={classes.cardTitleWhite}>Жолооны Дүрмүүд</h4>
+                      <p className={classes.cardCategoryWhite}>
+                        Манай вебд бүртгэлтэй жолооны дүрмүүд
+                      </p>
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={4}>
+                    
+                  </GridItem> 
+                </GridContainer>     
+              </CardHeader>
             </GridItem>
-             
-        </GridContainer>     
-          </CardHeader>
-          </GridItem>
           </GridContainer>
           <CardBody>
-<GridContainer>
-  <GridItem xs={12} sm={12} md={12}>
-  <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-helper-label">Дүрмийн ангилал</InputLabel>
-        <Select
-          labelId="demo-simple-select-helper-label"
-          id="demo-simple-select-helper"
-          value={category}
-          onChange={handleChange}
-          
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={10}>Нийтлэг үндэслэл</MenuItem>
-          <MenuItem value={20}>Жолоочийн үүрэг</MenuItem>
-          <MenuItem value={30}>Тээврийн хэрэгслээр зорчигчийн үүрэг</MenuItem>
-        </Select>
-        <GridItem xs={12} sm={12} md={12}>
-        <FormHelperText>Ангилалаа сонгоно уу!</FormHelperText>
-        </GridItem>
-      </FormControl>
-           </GridItem>
-      </GridContainer>
-      <GridContainer>
-  <GridItem xs={12} sm={12} md={12}>
-  <h4 > Нийтлэг үндэслэл</h4>
-            <p >
-            1.1. Энэ дүрмийн зорилго нь Монгол Улсын нутаг дэвсгэрт замын хөдөлгөөний нэгдсэн журам тогтооход оршино. Замын хөдөлгөөнтэй холбоотой бусад хэм хэмжээний актууд нь энэ дүрмийн заалт шаардлагууд дээр үндэслэгдсэн, түүнтэй зөрчилдөхгүй байвал зохино.
-            </p>
-            <p>
-            1.2. Энэ дүрэмд хэрэглэсэн дараахь нэр томьёог дор дурдсан утгаар ойлгоно:
-            </p>
-            
-  </GridItem>
-</GridContainer>
+            <GridContainer>
+            {data.duremcategorys.map(duremcategorys => {
+            return(
+              <div className={classes.root}>
+              
+            <ExpansionPanel expanded={expanded === duremcategorys._id} onChange={handlePanelChange(duremcategorys._id)}>
+                
 
-          </CardBody>
-        </Card>
-      </GridItem>
-      
-    </div>
+                <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel4bh-content"
+                id="panel4bh-header"
+                >
+
+                <Typography className={classes.heading}>
+                  <p>
+                    {duremcategorys.name}
+                    
+                  </p>
+                </Typography>
+            
+                </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Typography>
+                    <p>
+                      {duremcategorys.durmuud.map(durem => {
+                        return(
+                          <p>
+                            {durem.description}
+                          
+                            
+                          </p>
+                        )
+                      }
+                      )}
+                    </p>
+
+                </Typography>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+            </div>
+            )})}
+            </GridContainer>
+        </CardBody>
+    </Card>
+  </GridItem>
+
+  </GridContainer>
+</div>
   );
 }

@@ -134,13 +134,13 @@ export default function PostAdmin() {
 
   const handleCreatePost = () => {
     console.log(newPost);
-    if(!newPost.name){
+    if(!newPost.description){
       notification.error('name talbariig zaaval buglunu uu')
       return;
     }
     createPost({
       variables: {
-        post: newPost
+        postInput: newPost
       }
     })
     refetch();
@@ -213,7 +213,18 @@ export default function PostAdmin() {
                   fullWidth
                 />
               </GridItem>
+              <GridItem xs={12} sm={12} md={12}>
+                <TextField
+                  label="Зургийн URL" 
+                  name="image"
+                  value={newPost.image}
+                  className={classes.margin15}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </GridItem>
             </GridContainer>
+
             <br></br>
             <GridContainer>
               <GridItem xs={12} sm={12} md={12}>

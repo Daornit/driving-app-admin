@@ -15,6 +15,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import Admin from "layouts/Admin.js";
 import RTL from "layouts/RTL.js";
 import SignIn from "views/Login/SingIn";
+import SignUp from "views/SignUp/SignUps";
 
 import ReactNotification from 'react-notifications-component';
 
@@ -50,6 +51,7 @@ ReactDOM.render(
       <Router history={history}>
         <Switch>
           <Route exact path="/login" component={SignIn} />
+          <Route exact path="/register" component={SignUp} />
           <Route path="/admin" component={Admin} />
           <Route path="/student" component={Admin} />
           <Route path="/teacher" component={Admin} />

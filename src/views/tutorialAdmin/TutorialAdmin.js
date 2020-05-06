@@ -123,7 +123,7 @@ export default function TutorialAdmin() {
     }
     createTutorial({
       variables: {
-        Tutorial: newTutorial
+        tutorialInput: newTutorial
       }
     })
     refetch();
@@ -136,35 +136,7 @@ export default function TutorialAdmin() {
   }
 
   let listOfTutorial = [];
-  if(data && data.tutorials){
-    data.tutorials.forEach((obj, index) => {
-      let tutorial = [];
-      tutorial.push(index);
-      tutorial.push(obj.title);
-      tutorial.push(obj.description);
-      tutorial.push(obj.video);
-      tutorial.push(obj.image);
-      tutorial.push(<IconButton
-                      aria-label="Close"
-                      className={classes.tableActionButton}
-                    > <Close
-                    className={
-                      classes.tableActionButtonIcon + " " + classes.close
-                    }
-                    onClick={() => {
-                        deleteTutorial({
-                          variables: {
-                            tutorialId: obj._id
-                          }
-                        });
-                        refetch();
-                      }
-                    }
-                  />
-                </IconButton>);
-      listOfTutorial.push(tutorial);
-    })
-  }
+  
   console.log(listOfTutorial);
   const handleOpen = () => {
     setOpen(true);
@@ -180,7 +152,7 @@ export default function TutorialAdmin() {
         <GridContainer id="simple-modal-title">
           <CardHeader color="primary">
             <GridItem xs={12} sm={12} md={12}>
-              <h4 className={classes.cardTitleWhite}>Зарлал нэмэх</h4>
+              <h4 className={classes.cardTitleWhite}>Хичээл нэмэх</h4>
             </GridItem>
           </CardHeader>
         </GridContainer>
@@ -259,6 +231,7 @@ export default function TutorialAdmin() {
         <Card>
           
 <GridContainer>
+
 <GridItem xs={12} sm={12} md={12}>
           <CardHeader color="primary">
             <GridContainer>
@@ -284,23 +257,26 @@ export default function TutorialAdmin() {
           </GridContainer>
           <CardBody>
             <GridContainer>
+            {data.tutorials.map(tutorial => {
+              return(
                 <GridItem xs={12} sm={12} md={4}>
                     <Card>
                         <CardHeader>
-                          <h4>{listOfTutorial.title}</h4>
+                          <h4>{tutorial.title}</h4>
                     
                     </CardHeader>
                     <CardBody>
     
             <GridItem xs={12} sm={12} md={12}>
-            <iframe src={listOfTutorial.video} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src={tutorial.video} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </GridItem>
             <Box><p>
-                {listOfTutorial.description}
+                {tutorial.description}
                 </p></Box>
                     </CardBody>
                     </Card>
                 </GridItem>
+            )})}
             </GridContainer>
           </CardBody>
         </Card>

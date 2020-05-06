@@ -27,12 +27,13 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 //graphql
-import { GET_DUREM, DELETE_DUREM, CREATE_DUREM } from 'queries';
+import { GET_DUREM, DELETE_DUREM, CREATE_DUREM, CREATE_DUREMCATEGORY, GET_DUREMCATEGORY} from 'queries';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import notification from 'helpers/notification';
 
 import IconButton from "@material-ui/core/IconButton";
 import Close from "@material-ui/icons/Close";
+import Add from '@material-ui/icons/AddCircle';
 import TextField from '@material-ui/core/TextField';
 
 
@@ -102,6 +103,8 @@ const useStyles = makeStyles(
     },
     head: {
       backgroundColor: "primary",
+    },
+    tableActionButton: {
     }
   })
 );
@@ -112,9 +115,12 @@ export default function DuremAdmin() {
   
   const [ deleteDurem ] = useMutation(DELETE_DUREM);
   const [ createDurem ] = useMutation(CREATE_DUREM);
+  const [ createDuremCategory ] = useMutation(CREATE_DUREMCATEGORY);
   
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+  const [open1, setOpen1] = React.useState(false);
+  const [categoryIdToAddDurem, setCategoryIdToAddDurem] = React.useState(false);
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -127,13 +133,48 @@ export default function DuremAdmin() {
     description:""
   });
 
-  const { loading, err, data, refetch } = useQuery(GET_DUREM);
+  const [newDuremCategory, setNewDuremCategory] = React.useState({
+    name:""
+  });
 
+  const { loading, err, data, refetch } = useQuery(GET_DUREM);
+  
   if (loading) return 'Loading...';
   if (err) {
     notification.error(err.message);
     return err.message;
   };
+  
+  const handleChangeCategory = event => {
+    const name = event.target.name;
+    setNewDuremCategory({
+      ...newDuremCategory,
+      [name]: event.target.value,
+    });
+  };
+
+  const handleCreateDuremCategory = () => {
+    console.log(newDuremCategory);
+    if(!newDuremCategory.name){
+      notification.error('name talbariig zaaval buglunu uu')
+      return;
+    }
+    createDuremCategory({
+      variables: {
+        categoryName: newDuremCategory.name
+      }
+    }).then(data => {
+      refetch();
+      setNewDuremCategory({
+        name: ""
+      })
+      setOpen(false);
+      notification.success('amjilttai uuslee')
+    })
+   
+  }
+  
+
 
   const handleChange = event => {
     const name = event.target.name;
@@ -145,56 +186,28 @@ export default function DuremAdmin() {
 
   const handleCreateDurem = () => {
     console.log(newDurem);
-    if(!newDurem.name){
-      notification.error('name talbariig zaaval buglunu uu')
+    if(!newDurem.description){
+      notification.error('description talbariig zaaval buglunu uu')
       return;
     }
     createDurem({
       variables: {
-        durem: newDurem
+        duremInput: newDurem,
+        categoryId: categoryIdToAddDurem
       }
     })
     refetch();
     setNewDurem({
-      name: "",
-      email: "",
+      title: "",
       image: "",
       description:""
     })
     setOpen(false);
     notification.success('amjilttai uuslee')
   }
+  
 
   let listOfDurem = [];
-  if(data && data.duremuud){
-    data.duremuud.forEach((obj, index) => {
-      let durem = [];
-      durem.push(index);
-      durem.push(obj.title);
-      durem.push(obj.description);
-      durem.push(obj.image);
-      durem.push(obj.category.name);
-      durem.push(<IconButton
-                      aria-label="Close"
-                      className={classes.tableActionButton}
-                    > <Close
-                    className={
-                      classes.tableActionButtonIcon + " " + classes.close
-                    }
-                    onClick={() => {
-                        deleteDurem({
-                          variables: {
-                            duremId: obj._id
-                          }
-                        });
-                        refetch();
-                      }
-                    }
-                  />
-                </IconButton>);
-      listOfDurem.push(durem);
-    })
-  }
   
   const handleOpen = () => {
     setOpen(true);
@@ -203,19 +216,28 @@ export default function DuremAdmin() {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleOpen1 = (categoryId) => {
+    console.log("categoryId:: ", categoryId);
+    setCategoryIdToAddDurem(categoryId)
+    setOpen1(true);
+  };
 
-  const body1 = (
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
+
+  const body = (
     <div style={modalStyle} className={classes.paper}>
       <Card>
-        <GridContainer id="simple-modal-title">
+        <GridContainer id="simple-modal-title-durem">
           <CardHeader color="primary">
             <GridItem xs={12} sm={12} md={12}>
-              <h4 className={classes.cardTitleWhite}>Жолооны курс нэмэх</h4>
+              <h4 className={classes.cardTitleWhite}>Жолооны дүрэм нэмэх</h4>
             </GridItem>
           </CardHeader>
         </GridContainer>
         <CardBody>
-            <GridContainer id="simple-modal-description">
+            <GridContainer id="simple-modal-description-durem">
               <GridItem xs={12} sm={12} md={12}>
                 <TextField
                   label="Гарчиг" 
@@ -265,6 +287,44 @@ export default function DuremAdmin() {
       </Card>
     </div>
   );
+  const body1 = (
+    <div style={modalStyle} className={classes.paper}>
+      <Card>
+        <GridContainer id="simple-modal-title">
+          <CardHeader color="primary">
+            <GridItem xs={12} sm={12} md={12}>
+              <h4 className={classes.cardTitleWhite}>Жолооны дүрмийн ангилал нэмэх</h4>
+            </GridItem>
+          </CardHeader>
+        </GridContainer>
+        <CardBody>
+            <GridContainer id="simple-modal-description">
+              <GridItem xs={12} sm={12} md={12}>
+                <TextField
+                  label="Нэр" 
+                  name="name"
+                  value={newDuremCategory.name}
+                  className={classes.margin15}
+                  onChange={handleChangeCategory}
+                  fullWidth
+                />
+              </GridItem>
+            </GridContainer>
+          </CardBody>
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={4}>
+            <Button
+              fullWidth
+              color="primary" 
+              onClick={handleCreateDuremCategory}         
+              >
+              Нэмэх
+            </Button>
+          </GridItem>
+        </GridContainer>
+      </Card>
+    </div>
+  );
   return (
     <div>
       <Modal
@@ -273,6 +333,12 @@ export default function DuremAdmin() {
   aria-labelledby="simple-modal-title"
   aria-describedby="simple-modal-description"
 >{body1}</Modal>
+<Modal
+  open={open1}
+  onClose={handleClose1}
+  aria-labelledby="simple-modal-title-durem"
+  aria-describedby="simple-modal-description-durem"
+>{body}</Modal>
       <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
         <Card>
@@ -293,7 +359,7 @@ export default function DuremAdmin() {
                       onClick={handleOpen}          
                     >
                       <a color="primary">          
-                        Жолооны дүрэм нэмэх
+                        Жолооны дүрмийн ангилал нэмэх
                       </a>
                     </Button>
                   </GridItem> 
@@ -302,22 +368,77 @@ export default function DuremAdmin() {
             </GridItem>
           </GridContainer>
           <CardBody>
+            <GridContainer>
+            {data.duremcategorys.map(duremcategorys => {
+            return(
+              <div className={classes.root}>
+              
+            <ExpansionPanel expanded={expanded === duremcategorys._id} onChange={handlePanelChange(duremcategorys._id)}>
+                
 
-            <ExpansionPanel expanded={expanded === 'panel4'} onChange={handlePanelChange('panel4')}>
                 <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel4bh-content"
                 id="panel4bh-header"
                 >
-                <Typography className={classes.heading}>Personal data</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+
+                <Typography className={classes.heading}>
+                  <p>
+                    {duremcategorys.name}
+                    
+                    <IconButton
+                                  aria-label="Add"
+                                  className={classes.tableActionButton}
+                                > <Add
+                                className={
+                                  classes.tableActionButtonIcon + " " + classes.add
+                                }
+                                onClick={() => handleOpen1(duremcategorys._id)} 
+                              />
+                            </IconButton>
+                  </p>
+                </Typography>
+            
+                </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
                 <Typography>
-                    Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
-                    vitae egestas augue. Duis vel est augue.
+                    <p>
+                      {duremcategorys.durmuud.map(durem => {
+                        return(
+                          <p>
+                            {durem.description}
+                          
+                              <IconButton
+                                  aria-label="Close"
+                                  className={classes.tableActionButton}
+                                > <Close
+                                className={
+                                  classes.tableActionButtonIcon + " " + classes.close
+                                }
+                                onClick={() => {
+                                    deleteDurem({
+                                      variables: {
+                                        duremId: durem._id
+                                      }
+                                    });
+                                    refetch();
+                                  }
+                                }
+                              />
+                            </IconButton>
+                            
+                          </p>
+                        )
+                      }
+                      )}
+                    </p>
+
                 </Typography>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
+            </div>
+            )})}
+            </GridContainer>
         </CardBody>
     </Card>
   </GridItem>
