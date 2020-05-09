@@ -14,7 +14,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 //apollo client config
-import { LOGIN_QUERY } from 'queries';
 import { useMutation } from '@apollo/react-hooks';
 import notification from '../../helpers/notification';
 import { CREATE_USERS } from 'queries';
@@ -56,6 +55,13 @@ export default function SignUps(props) {
   const classes = useStyles();
 
   const [ createUsers ] = useMutation(CREATE_USERS);
+  
+  const [state, setState] = useState({
+    email: '',
+    password: '',
+    username:'',
+    phone:'',
+  });
 
   const [newUser, setNewUser] = React.useState({
     username: "",
@@ -75,7 +81,9 @@ export default function SignUps(props) {
   };
 
   
-  const handleCreateUsers = () => {
+  const handleCreateUsers = (e) => {
+    e.preventDefault();
+
     console.log(newUser);
     if(!newUser.username){
       notification.error('name talbariig zaaval buglunu uu')
@@ -87,7 +95,8 @@ export default function SignUps(props) {
         phone: Number(newUser.phone)
       }
     }).then(()=>{
-        notification.success('amjilttai uuslee')
+        notification.success('amjilttai uuslee');
+        props.history.push('/login');
     }).catch((err)=> notification.error(err.message))
     
   }
@@ -102,7 +111,7 @@ export default function SignUps(props) {
         <Typography component="h1" variant="h5">
           Нэвтрэх
         </Typography>
-        <form className={classes.form} noValidate >
+        <form className={classes.form} noValidate onSubmit={handleCreateUsers} >
           <TextField
             variant="outlined"
             margin="normal"
@@ -138,7 +147,7 @@ export default function SignUps(props) {
             value={newUser.phone}
             label="Утасны дугаар"
             name="phone"
-            autoComplete="pjone"
+            autoComplete="phone"
             onChange={handleChange}
             autoFocus
           />
@@ -161,7 +170,6 @@ export default function SignUps(props) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleCreateUsers}
           >
             Бүртгүүлэх
           </Button>

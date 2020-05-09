@@ -80,7 +80,17 @@ export default function SignIn(props) {
           localStorage.setItem('token', res.data.login.token);
           localStorage.setItem('type', res.data.login.type);
           notification.success("Амжилттай нэвтэрлээ!");
-          props.history.push('/admin/course');
+          if(res.data.login.type === 'CLIENT'){
+            props.history.push('/student/calendar');
+          }else if(res.data.login.type === 'ADMIN'){
+            props.history.push('/admin/course');
+          }
+          else if(res.data.login.type === 'DIRECTOR'){
+            props.history.push('/director/course');
+          }
+          else if(res.data.login.type === 'TEACHER'){
+            props.history.push('/teacher/calendar');
+          }
         })
         .catch(err => {
           console.log("err:: ", err.message)
@@ -139,7 +149,7 @@ export default function SignIn(props) {
           </Button>
           <Grid container>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/register" variant="body2">
                 {"Бүртгэл үүсгэх"}
               </Link>
             </Grid>

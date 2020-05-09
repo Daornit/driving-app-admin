@@ -111,9 +111,7 @@ export default function PostAdmin() {
   const [newPost, setNewPost] = React.useState({
     title: "",
     image: "",
-    description:"",
-    createdDate:"",
-    author:""
+    description:""
   });
 
   const { loading, err, data, refetch } = useQuery(GET_POSTS);

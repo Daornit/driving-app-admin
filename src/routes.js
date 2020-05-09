@@ -65,11 +65,25 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
+    path: "/news",
+    name: "Мэдээ мэдээлэл",
+    icon: LibraryBooks,
+    component: PostAdmin,
+    layout: "/director"
+  },
+  {
     path: "/calendar",
     name: "Календарь",
     icon: "content_paste",
     component: CalendarStudent,
     layout: "/student"
+  },
+  {
+    path: "/calendar",
+    name: "Календарь",
+    icon: "content_paste",
+    component: CalendarStudent,
+    layout: "/teacher"
   },
   {
     path: "/answer",
@@ -86,7 +100,7 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/student/exam",
+    path: "/exam",
     name: "Шалгалт өгөх",
     icon: LibraryBooks,
     component: Exam,

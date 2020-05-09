@@ -18,6 +18,9 @@ import IconButton from "@material-ui/core/IconButton";
 import Close from "@material-ui/icons/Close";
 import Box from '@material-ui/core/Box';
 import avatar from "assets/img/faces/test1.jpg";
+import ReactPlayer from "react-player";
+import DeleteIcon from '@material-ui/icons/Delete';
+
 import CardAvatar from "components/Card/CardAvatar.js";
 
 
@@ -26,6 +29,7 @@ import TextField from '@material-ui/core/TextField';
 import { GET_TUTORIALS, DELETE_TUTORIALS, CREATE_TUTORIALS } from 'queries';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import notification from 'helpers/notification';
+
 
 
 function getModalStyle() {
@@ -96,7 +100,8 @@ export default function TutorialAdmin() {
     title: "",
     image: "",
     description:"",
-    video:""
+    video:"",
+    comment:""
   });
 
   const { loading, err, data, refetch } = useQuery(GET_TUTORIALS);
@@ -129,7 +134,9 @@ export default function TutorialAdmin() {
     refetch();
     setNewTutorial({
       title: "",
-      description:""
+      description:"",
+      comment:"",
+      video:""
     })
     setOpen(false);
     notification.success('amjilttai uuslee')
@@ -259,30 +266,76 @@ export default function TutorialAdmin() {
             <GridContainer>
             {data.tutorials.map(tutorial => {
               return(
+                
                 <GridItem xs={12} sm={12} md={4}>
+                    
                     <Card>
+                    <GridContainer>
                         <CardHeader>
                           <h4>{tutorial.title}</h4>
                     
                     </CardHeader>
                     <CardBody>
+                      <GridContainer>
     
             <GridItem xs={12} sm={12} md={12}>
-            <iframe src={tutorial.video} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <ReactPlayer
+                width='100'
+                height='100'
+                url={tutorial.video}
+              />
             </GridItem>
+            </GridContainer>
             <Box><p>
                 {tutorial.description}
                 </p></Box>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <IconButton
+                        aria-label="Close"
+                        className={classes.tableActionButton}
+                      > <Close
+                      className={
+                        classes.tableActionButtonIcon + " " + classes.close
+                      }
+                      onClick={() => {
+                          deleteTutorial({
+                            variables: {
+                              tutorialId: tutorial._id
+                            }
+                          });
+                          refetch();
+                        }
+                      }
+                    />
+                  </IconButton>
+                  </GridItem>
+                  </GridContainer>
+                  <Card>
+                    
+                  <GridContainer>
+                  <CardBody>
+                    <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                      <p>
+                      {tutorial.comment}
+                      </p>
+                    </GridItem>
+                    </GridContainer>
                     </CardBody>
+                    
+                  </GridContainer>
+                  </Card>
+                    </CardBody>
+                    </GridContainer>
+        
                     </Card>
                 </GridItem>
             )})}
             </GridContainer>
           </CardBody>
         </Card>
-      </GridItem>
-
-      
+      </GridItem>      
     </GridContainer>
   );
 }

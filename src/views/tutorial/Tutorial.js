@@ -1,46 +1,50 @@
 import React from "react";
-
-// @material-ui/core
-
+// @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-// @material-ui/icons
-
 // core components
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Button from "components/CustomButtons/Button.js";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-
 import CardBody from "components/Card/CardBody.js";
-import { Grid } from "@material-ui/core";
-import { cardHeader } from "assets/jss/material-dashboard-react";
-import { card } from "assets/jss/material-dashboard-react";
+import Button from "components/CustomButtons/Button.js";
+import Modal from '@material-ui/core/Modal';
+import CustomInput from "components/CustomInput/CustomInput.js";
+import InputLabel from "@material-ui/core/InputLabel";
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import Tasks from "components/Tasks/Tasks";
+import IconButton from "@material-ui/core/IconButton";
+import Close from "@material-ui/icons/Close";
+import Box from '@material-ui/core/Box';
+import avatar from "assets/img/faces/test1.jpg";
+import ReactPlayer from "react-player";
+import DeleteIcon from '@material-ui/icons/Delete';
+
+import CardAvatar from "components/Card/CardAvatar.js";
+
+
+import TextField from '@material-ui/core/TextField';
+
+import { GET_TUTORIALS, DELETE_TUTORIALS, CREATE_TUTORIALS } from 'queries';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import notification from 'helpers/notification';
 
 
 
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
 
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
 const useStyles = makeStyles(
   (theme) => ({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
     cardCategoryWhite: {
       "&,& a,& a:hover,& a:focus": {
         color: "rgba(255,255,255,.62)",
@@ -80,60 +84,184 @@ const useStyles = makeStyles(
       },
     },
     head: {
-      backgroundColor: "primary",
+      backgroundColor: "primary", 
     }
   })
 );
-
 export default function Tutorial() {
   const classes = useStyles();
+
+  const [ deleteTutorial ] = useMutation(DELETE_TUTORIALS);
+  const [ createTutorial ] = useMutation(CREATE_TUTORIALS);
+
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
+  const [newTutorial, setNewTutorial] = React.useState({
+    comment:""
+  });
+
+  const { loading, err, data, refetch } = useQuery(GET_TUTORIALS);
+
+  if (loading) return 'Loading...';
+  if (err) {
+    notification.error(err.message);
+    return err.message;
+  };
+
+  const handleChange = event => {
+    const name = event.target.name;
+    setNewTutorial({
+      ...newTutorial,
+      [name]: event.target.value,
+    });
+  };
+
+  const handleCreateTutorial = () => {
+    console.log(newTutorial);
+    if(!newTutorial.comment){
+      notification.error('comment talbariig zaaval buglunu uu')
+      return;
+    }
+    createTutorial({
+      variables: {
+        tutorialInput: newTutorial
+      }
+    })
+    refetch();
+    setNewTutorial({
+      comment:""
+      
+    })
+    setOpen(false);
+    notification.success('amjilttai ilgeelee')
+  }
+
+  let listOfTutorial = [];
   
+  console.log(listOfTutorial);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
-    <div>
+    <GridContainer>
+      
       <GridItem xs={12} sm={12} md={12}>
         
         <Card>
           
 <GridContainer>
+
 <GridItem xs={12} sm={12} md={12}>
           <CardHeader color="primary">
             <GridContainer>
-          <GridItem xs={12} sm={12} md={8}>
-            <h4 className={classes.cardTitleWhite}>Хичээл үзэх</h4>
+          <GridItem xs={12} sm={12} md={12}>
+            <h4 className={classes.cardTitleWhite}>Онлайн хичээл</h4>
             <p className={classes.cardCategoryWhite}>
-              Дүрмийн хичээлүүд
+              Дүрмийн хичээлийн онлайн материал
             </p>
             </GridItem>
-             
         </GridContainer>     
           </CardHeader>
           </GridItem>
           </GridContainer>
           <CardBody>
-<GridContainer>
-  <GridItem xs={12} sm={12} md={12}>
-    <Card>
-      <CardHeader color="primary">
-      <GridContainer>
-          <GridItem xs={12} sm={12} md={8}>
-            <h4 className={classes.cardTitleWhite}>Хичээл үзэх</h4>
-            <p className={classes.cardCategoryWhite}>
-              Дүрмийн хичээлүүд
-            </p>
+            <GridContainer>
+            {data.tutorials.map(tutorial => {
+              return(
+                
+                <GridItem xs={12} sm={12} md={12}>
+                    
+                    <Card>
+                    <GridContainer>
+                        <CardHeader>
+                          <h4>{tutorial.title}</h4>
+                    
+                    </CardHeader>
+                    <CardBody>
+                      <GridContainer>
+    
+            <GridItem xs={12} sm={12} md={12}>
+              <ReactPlayer
+                url={tutorial.video}
+              />
             </GridItem>
-             
-        </GridContainer>
-      </CardHeader>
-      <CardBody>
-
-      </CardBody>
-    </Card>
-      </GridItem>
-</GridContainer>
-</CardBody>
-</Card>      
-</GridItem>
-    </div>
+            </GridContainer>
+            <Box><p>
+                {tutorial.description}
+                </p></Box>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <IconButton
+                        aria-label="Close"
+                        className={classes.tableActionButton}
+                      > <Close
+                      className={
+                        classes.tableActionButtonIcon + " " + classes.close
+                      }
+                      onClick={() => {
+                          deleteTutorial({
+                            variables: {
+                              tutorialId: tutorial._id
+                            }
+                          });
+                          refetch();
+                        }
+                      }
+                    />
+                  </IconButton>
+                  </GridItem>
+                  </GridContainer>
+                  <Card>
+                    
+                  <GridContainer>
+                  <CardBody>
+                    <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                      <p>
+                      {tutorial.comment}
+                      </p>
+                    </GridItem>
+                    </GridContainer>
+                    </CardBody>
+                    <GridContainer>
+                    
+                      <GridItem xs={12} sm={12} md={12}>
+                        <TextareaAutosize style={{width: "100%"}}
+                          name="comment"
+                          value={newTutorial.comment} 
+                          className={classes.margin15}
+                          onChange={handleChange}
+                          rows={3}
+                          placeholder="Сэтгэгдэл үлдээх."  
+                        />      
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={4}>
+                        <Button
+                          fullWidth
+                          color="primary" 
+                          onClick={handleCreateTutorial}         
+                          >
+                        Илгээх
+                        </Button>
+                      </GridItem>
+                    </GridContainer>
+                  </GridContainer>
+                  </Card>
+                    </CardBody>
+                    </GridContainer>
+        
+                    </Card>
+                </GridItem>
+            )})}
+            </GridContainer>
+          </CardBody>
+        </Card>
+      </GridItem>      
+    </GridContainer>
   );
 }
