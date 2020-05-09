@@ -283,3 +283,42 @@ export const DELETE_DUREM = gql`
     }
   }
 `;
+
+export const CREATE_SCHEDULE = gql`
+  mutation addCalendarSchedule($date:String!, $name: String!){
+    addCalendarSchedule(event: {
+      date:$date,
+      name:$name
+    }){
+      _id
+      startDate
+      endDate
+      name
+      teacher{
+        username
+      }
+    }
+  }
+`;
+
+export const DELETE_SCHEDULE = gql`
+  mutation removeCalendarSchedule($id:String!){
+    removeCalendarSchedule(scheduleId: $id){
+      _id
+    }
+  }
+`;
+
+export const GET_SCHEDULES = gql`
+query{
+  schedules{
+    _id
+    name
+    startDate
+    endDate
+    teacher{
+      username
+    }
+  }
+}
+`;
