@@ -139,14 +139,7 @@ export default function Tutorial() {
   let listOfTutorial = [];
   
   console.log(listOfTutorial);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  
   return (
     <GridContainer>
       

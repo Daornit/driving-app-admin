@@ -121,6 +121,20 @@ export const GET_TUTORIALS = gql`
     description
     video
     image
+    comment
+  }
+}
+`;
+
+export const UPDATE_TUTORIALS = gql`
+  mutation addTutorial($tutorialInput: TutorialInput!){
+  addTutorial(tutorial:$tutorialInput){
+    _id
+    title
+    description
+    video
+    image
+    comment
   }
 }
 `;
