@@ -26,7 +26,7 @@ import CardAvatar from "components/Card/CardAvatar.js";
 
 import TextField from '@material-ui/core/TextField';
 
-import { GET_TUTORIALS, DELETE_TUTORIALS, CREATE_TUTORIALS } from 'queries';
+import { GET_TUTORIALS, UPDATE_TUTORIALS } from 'queries';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import notification from 'helpers/notification';
 
@@ -90,13 +90,12 @@ const useStyles = makeStyles(
 );
 export default function Tutorial() {
   const classes = useStyles();
-
-  const [ deleteTutorial ] = useMutation(DELETE_TUTORIALS);
-  const [ createTutorial ] = useMutation(CREATE_TUTORIALS);
+  
+  const [ updateTutorial ] = useMutation(UPDATE_TUTORIALS);
 
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
-  const [newTutorial, setNewTutorial] = React.useState({
+  const [UpdateTutorial, setUpdateTutorial] = React.useState({
     comment:""
   });
 
@@ -108,37 +107,43 @@ export default function Tutorial() {
     return err.message;
   };
 
+  console.log(data);
+
   const handleChange = event => {
     const name = event.target.name;
-    setNewTutorial({
-      ...newTutorial,
+    setUpdateTutorial({
+      ...UpdateTutorial,
       [name]: event.target.value,
     });
   };
 
-  const handleCreateTutorial = () => {
-    console.log(newTutorial);
-    if(!newTutorial.comment){
+  const handleUpdateTutorial = (tutorialId) => {
+    console.log(UpdateTutorial);
+    if(!UpdateTutorial.comment){
       notification.error('comment talbariig zaaval buglunu uu')
       return;
     }
-    createTutorial({
-      variables: {
-        tutorialInput: newTutorial
+    updateTutorial({
+      variables:  {
+        tutorialId: tutorialId,
+        updateTutorial: {
+          comment: [
+            {
+              commentDescription: UpdateTutorial.comment,
+              createdDate: new Date().toISOString()
+            }
+          ]
+        }
       }
     })
     refetch();
-    setNewTutorial({
+    setUpdateTutorial({
       comment:""
       
     })
     setOpen(false);
     notification.success('amjilttai ilgeelee')
   }
-
-  let listOfTutorial = [];
-  
-  console.log(listOfTutorial);
   
   return (
     <GridContainer>
@@ -167,7 +172,7 @@ export default function Tutorial() {
             {data.tutorials.map(tutorial => {
               return(
                 
-                <GridItem xs={12} sm={12} md={12}>
+                <GridItem key={tutorial._id} xs={12} sm={12} md={12}>
                     
                     <Card>
                     <GridContainer>
@@ -187,28 +192,6 @@ export default function Tutorial() {
             <Box><p>
                 {tutorial.description}
                 </p></Box>
-                <GridContainer>
-                  <GridItem xs={12} sm={12} md={12}>
-                    <IconButton
-                        aria-label="Close"
-                        className={classes.tableActionButton}
-                      > <Close
-                      className={
-                        classes.tableActionButtonIcon + " " + classes.close
-                      }
-                      onClick={() => {
-                          deleteTutorial({
-                            variables: {
-                              tutorialId: tutorial._id
-                            }
-                          });
-                          refetch();
-                        }
-                      }
-                    />
-                  </IconButton>
-                  </GridItem>
-                  </GridContainer>
                   <Card>
                     
                   <GridContainer>
@@ -216,7 +199,9 @@ export default function Tutorial() {
                     <GridContainer>
                     <GridItem xs={12} sm={12} md={12}>
                       <p>
-                      {tutorial.comment}
+                      {tutorial.comment.map(obj => (
+                        <p>{obj.commentDescription} - {obj.createdDate.substr(0,10)}</p>
+                      ))}
                       </p>
                     </GridItem>
                     </GridContainer>
@@ -226,7 +211,7 @@ export default function Tutorial() {
                       <GridItem xs={12} sm={12} md={12}>
                         <TextareaAutosize style={{width: "100%"}}
                           name="comment"
-                          value={newTutorial.comment} 
+                          value={updateTutorial.comment} 
                           className={classes.margin15}
                           onChange={handleChange}
                           rows={3}
@@ -237,7 +222,7 @@ export default function Tutorial() {
                         <Button
                           fullWidth
                           color="primary" 
-                          onClick={handleCreateTutorial}         
+                          onClick={() => handleUpdateTutorial(tutorial._id)}         
                           >
                         Илгээх
                         </Button>

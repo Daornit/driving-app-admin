@@ -122,6 +122,13 @@ const dashboardRoutes = [
   },
   {
     path: "/Tutorial",
+    name: "Хичээл үзэх",
+    icon: Language,
+    component: Tutorial,
+    layout: "/teacher"
+  },
+  {
+    path: "/Tutorial",
     name: "Хичээл",
     icon: Language,
     component: TutorialAdmin,

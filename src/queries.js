@@ -114,27 +114,32 @@ export const CREATE_POST = gql`
 
 
 export const GET_TUTORIALS = gql`
-  query{
+    query{
   tutorials{
     _id
     title
     description
     video
     image
-    comment
+    comment{
+      commentDescription
+      createdDate
+    }
   }
 }
 `;
 
 export const UPDATE_TUTORIALS = gql`
-  mutation addTutorial($tutorialInput: TutorialInput!){
-  addTutorial(tutorial:$tutorialInput){
+  mutation updateTutorial($tutorialId: String!, $updateTutorial: UpdateTutorial!){
+  updateTutorial(tutorialId:$tutorialId, updateTutorial:$updateTutorial){
     _id
     title
     description
     video
-    image
-    comment
+    comment{
+      commentDescription
+      createdDate
+    }
   }
 }
 `;
