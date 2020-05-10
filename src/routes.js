@@ -122,7 +122,7 @@ const dashboardRoutes = [
   },
   {
     path: "/Tutorial",
-    name: "Хичээл үзэх",
+    name: "Хичээл",
     icon: Language,
     component: Tutorial,
     layout: "/teacher"
