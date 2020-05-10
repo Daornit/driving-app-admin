@@ -135,7 +135,7 @@ export default function TutorialAdmin() {
     setNewTutorial({
       title: "",
       description:"",
-      comment:"",
+      comment:[],
       video:""
     })
     setOpen(false);
@@ -314,15 +314,6 @@ export default function TutorialAdmin() {
                   <Card>
                     
                   <GridContainer>
-                  <CardBody>
-                    <GridContainer>
-                    <GridItem xs={12} sm={12} md={12}>
-                      <p>
-                      {tutorial.comment}
-                      </p>
-                    </GridItem>
-                    </GridContainer>
-                    </CardBody>
                     
                   </GridContainer>
                   </Card>
