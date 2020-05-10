@@ -198,7 +198,7 @@ export default function Exam() {
                 title={tests[currentIndex].hint}
               > 
                 <IconButton onClick={handleTooltipOpen} className={classes.button} color="danger">
-                    <HelpIcon />
+                    
                 </IconButton>
               </Tooltip>
             </GridItem>

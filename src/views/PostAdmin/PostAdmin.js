@@ -287,7 +287,7 @@ export default function PostAdmin() {
       <CardBody>
       <Table
               tableHeaderColor="primary"
-              tableHead={["ID","Title", "Description", "Author", "CreatedDate", "Action"]}
+              tableHead={["ID","Title", "Description", "CreatedDate", "Author", "Action"]}
               tableData={listOfPost}
             />
       </CardBody>

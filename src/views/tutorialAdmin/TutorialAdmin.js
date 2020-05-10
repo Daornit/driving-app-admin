@@ -101,7 +101,7 @@ export default function TutorialAdmin() {
     image: "",
     description:"",
     video:"",
-    comment:""
+    comment:[]
   });
 
   const { loading, err, data, refetch } = useQuery(GET_TUTORIALS);
